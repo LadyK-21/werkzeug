@@ -83,7 +83,16 @@ Version 3.2.0
     and ``upgrade_insecure_requests`` CSP directives. :pr:`3114`
 -   The development server does not send an extra ``100 Continue`` response, as
     Python's base server already sends it. :issue:`3138`
--   The float URL converter does not produce scientific notation. :issue:`3146`
+-   The ``int`` and ``float`` URL converters do not accept non-ASCII digits.
+     :issue:`3242`
+-   The ``int`` and ``float`` URL converters validate the value when building
+    URLs. :issue:`3242`
+-   The ``int`` URL converter does not count the negative sign for
+    ``fixed_digits``. :issue:`3242`
+-   The ``float`` URL converter does not accept values that are too large and
+    overflow to ``inf``. :issue:`3242`
+-   The ``float`` URL converter does not produce scientific notation, ``inf``,
+    or ``nan``. :issue:`3146`
 -   ``Request.if_range`` discards the header if it is an invalid weak ETag.
     :pr:`3163`
 -   Use SHA3-256 instead of SHA-1 for generating ETags and the debugger pin.
