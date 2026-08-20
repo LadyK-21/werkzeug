@@ -74,7 +74,7 @@ def get_machine_id() -> str | bytes | None:
         # relatively stable across boots.
         try:
             with open("/proc/self/cgroup", "rb") as f:
-                linux += f.readline().strip().rpartition(b"/")[2]
+                linux += f.readline().strip()
         except OSError:
             pass
 
