@@ -1011,14 +1011,15 @@ def unquote_etag(
 
 _etag_re = re.compile(
     r"""
-    (?:^|[ \t]*,[ \t]*)  # start or preceded by comma
+    [ \t]*  # ignore leading space
     ([Ww]/)?  # optional weak marker
     (?:
         "([^"]*)"  # quoted value
     |
         ([^" \t,]+)  # invalid unquoted value, exclude syntax characters
     )
-    (?=[ \t]*,[ \t]*|$)  # only if followed by comma or end
+    [ \t]*  # ignore trailing space
+    (?:,|\Z)  # only if followed by comma or end
     """,
     flags=re.ASCII | re.VERBOSE,
 )
@@ -1038,14 +1039,24 @@ def parse_etags(value: str | None) -> ds.ETags:
 
     strong = []
     weak = []
+    pos = 0
 
-    for match in _etag_re.finditer(value):
-        is_weak, tag, invalid_unquoted = match.groups()
+    while True:
+        if (m := _etag_re.match(value, pos)) is None:
+            # Skip invalid chars until the next comma.
+            if (pos := value.find(",", pos) + 1) == 0:
+                break
+
+            continue
+
+        is_weak, tag, invalid_unquoted = m.groups()
+        pos = m.end()
+        tag = tag or invalid_unquoted
 
         if is_weak:
-            weak.append(tag or invalid_unquoted)
+            weak.append(tag)
         else:
-            strong.append(tag or invalid_unquoted)
+            strong.append(tag)
 
     return ds.ETags(strong, weak)
 
