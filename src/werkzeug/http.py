@@ -864,7 +864,7 @@ def parse_range_header(
 
     ranges = []
     last_end = 0
-    units, rng = value.split("=", 1)
+    units, _, rng = value.partition("=")
     units = units.strip(" \t").lower()
 
     for item in rng.split(","):
@@ -881,7 +881,7 @@ def parse_range_header(
             end = None
             last_end = -1
         elif "-" in item:
-            begin_str, end_str = item.split("-", 1)
+            begin_str, _, end_str = item.partition("-")
             begin_str = begin_str.strip(" \t")
             end_str = end_str.strip(" \t")
 
@@ -932,7 +932,7 @@ def parse_content_range_header(
 
     if "/" not in rangedef:
         return None
-    rng, length_str = rangedef.split("/", 1)
+    rng, _, length_str = rangedef.partition("/")
     if length_str == "*":
         length = None
     else:
@@ -949,7 +949,7 @@ def parse_content_range_header(
     elif "-" not in rng:
         return None
 
-    start_str, stop_str = rng.split("-", 1)
+    start_str, _, stop_str = rng.partition("-")
     try:
         start = _plain_int(start_str)
         stop = _plain_int(stop_str) + 1

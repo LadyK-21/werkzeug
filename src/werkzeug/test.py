@@ -491,7 +491,7 @@ class EnvironBuilder:
         .. versionadded:: 0.14
         """
         ct = self.content_type
-        return ct.split(";")[0].strip() if ct else None
+        return ct.partition(";")[0].strip() if ct else None
 
     @mimetype.setter
     def mimetype(self, value: str) -> None:
@@ -623,16 +623,16 @@ class EnvironBuilder:
     @property
     def server_name(self) -> str:
         """The server name (read-only, use :attr:`host` to set)"""
-        return self.host.split(":", 1)[0]
+        return self.host.partition(":")[0]
 
     @property
     def server_port(self) -> int:
         """The server port as integer (read-only, use :attr:`host` to set)"""
-        pieces = self.host.split(":", 1)
+        _, sep, port = self.host.partition(":")
 
-        if len(pieces) == 2:
+        if sep:
             try:
-                return int(pieces[1])
+                return int(port)
             except ValueError:
                 pass
 
@@ -1005,7 +1005,7 @@ class Client:
             response.request.environ, path=path, query_string=qs
         )
 
-        to_name_parts = netloc.split(":", 1)[0].split(".")
+        to_name_parts = netloc.partition(":")[0].split(".")
         from_name_parts = builder.server_name.split(".")
 
         if to_name_parts != [""]:
