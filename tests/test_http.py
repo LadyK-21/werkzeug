@@ -240,6 +240,11 @@ class TestHTTPUtility:
         content = base64.b64encode(b"\xffser:pass").decode()
         assert Authorization.from_header(f"Basic {content}") is None
 
+    def test_authorization_basic_validate(self):
+        """Non-alphabet characters are rejected."""
+        content = "!".join(base64.b64encode(b"test").decode())
+        assert Authorization.from_header(f"Basic {content}") is None
+
     def test_authorization_eq(self):
         basic1 = Authorization.from_header("Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==")
         basic2 = Authorization(
