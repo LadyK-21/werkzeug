@@ -14,6 +14,7 @@ Unreleased
 -   The ``int`` URL converter returns a 404 instead of 500 error when the value
     is longer than ``sys.get_int_max_str_digits()``. :issue:`3237`
 -   Improve debugger PIN generation from cgroup data inside Podman. :issue:`3245`
+-   ``Authorization`` parsing ``basic`` auth disallows non-base64 characters.
 
 
 Version 3.1.8
