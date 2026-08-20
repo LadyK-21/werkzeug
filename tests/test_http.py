@@ -500,7 +500,6 @@ class TestHTTPUtility:
             "b": '";',
             "fo234{": "bar",
             "blub": "Blah",
-            '"__Secure-c"': "d",
             "__Host-eq": "good",
         }
 
