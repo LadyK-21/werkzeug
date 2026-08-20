@@ -186,7 +186,7 @@ def unquote_header_value(value: str) -> str:
     .. versionchanged:: 3.0
         The ``is_filename`` parameter is removed.
     """
-    if len(value) >= 2 and value[0] == value[-1] == '"':
+    if len(value) >= 2 and value.startswith('"') and value.endswith('"'):
         return _unslash_re.sub(r"\g<1>", value[1:-1])
 
     return value
@@ -230,7 +230,7 @@ def dump_options_header(header: str | None, options: t.Mapping[str, t.Any]) -> s
         if value is None:
             continue
 
-        if key[-1] == "*":
+        if key.endswith("*"):
             segments.append(f"{key}={value}")
         else:
             segments.append(f"{key}={quote_header_value(value)}")
@@ -276,7 +276,7 @@ def dump_header(iterable: dict[str, t.Any] | t.Iterable[t.Any]) -> str:
         for key, value in iterable.items():
             if value is None:
                 items.append(key)
-            elif key[-1] == "*":
+            elif key.endswith("*"):
                 items.append(f"{key}={value}")
             else:
                 items.append(f"{key}={quote_header_value(value)}")

@@ -450,17 +450,17 @@ class WSGIRequestHandler(BaseHTTPRequestHandler):
         msg = msg.translate(self._control_char_table)
         code = str(code)
 
-        if code[0] == "1":  # 1xx - Informational
+        if code.startswith("1"):  # 1xx - Informational
             msg = _ansi_style(msg, "bold")
         elif code == "200":  # 2xx - Success
             pass
         elif code == "304":  # 304 - Resource Not Modified
             msg = _ansi_style(msg, "cyan")
-        elif code[0] == "3":  # 3xx - Redirection
+        elif code.startswith("3"):  # 3xx - Redirection
             msg = _ansi_style(msg, "green")
         elif code == "404":  # 404 - Resource Not Found
             msg = _ansi_style(msg, "yellow")
-        elif code[0] == "4":  # 4xx - Client Error
+        elif code.startswith("4"):  # 4xx - Client Error
             msg = _ansi_style(msg, "bold", "red")
         else:  # 5xx, or any other response
             msg = _ansi_style(msg, "bold", "magenta")
