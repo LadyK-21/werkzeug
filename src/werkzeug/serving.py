@@ -108,7 +108,7 @@ class DechunkedInput(io.RawIOBase):
     def read_chunk_len(self) -> int:
         try:
             line = self._rfile.readline().decode("latin1")
-            _len = int(line.strip(), 16)
+            _len = int(line.strip(" \t\r\n"), 16)
         except ValueError as e:
             raise OSError("Invalid chunk header") from e
         if _len < 0:
@@ -247,7 +247,7 @@ class WSGIRequestHandler(BaseHTTPRequestHandler):
         return environ
 
     def run_wsgi(self) -> None:
-        if self.headers.get("Expect", "").lower().strip() == "100-continue":
+        if self.headers.get("Expect", "").lower().strip(" \t") == "100-continue":
             self.wfile.write(b"HTTP/1.1 100 Continue\r\n\r\n")
 
         self.environ = environ = self.make_environ()

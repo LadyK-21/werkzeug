@@ -204,7 +204,7 @@ def _plain_int(value: str) -> int:
 
     Any leading or trailing whitespace is stripped
     """
-    value = value.strip()
+    value = value.strip(" \t")
     if _plain_int_re.fullmatch(value) is None:
         raise ValueError
 

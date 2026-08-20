@@ -1436,11 +1436,11 @@ class Cookie:
 
         for item in parameters_str.split(";"):
             k, sep, v = item.partition("=")
-            params[k.strip().lower()] = v.strip() if sep else None
+            params[k.strip(" \t").lower()] = v.strip(" \t") if sep else None
 
         return cls(
-            key=key.strip(),
-            value=value.strip(),
+            key=key.strip(" \t"),
+            value=value.strip(" \t"),
             decoded_key=decoded_key,
             decoded_value=decoded_value,
             expires=parse_date(params.get("expires")),

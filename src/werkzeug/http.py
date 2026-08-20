@@ -356,7 +356,9 @@ def parse_list_header(value: str) -> list[str]:
 
     items.append(item)
     return [
-        unquote_header_value(item) for item in (item.strip() for item in items) if item
+        unquote_header_value(item)
+        for item in (item.strip(" \t") for item in items)
+        if item
     ]
 
 
@@ -399,7 +401,7 @@ def parse_dict_header(value: str) -> dict[str, str | None]:
 
     for item in parse_list_header(value):
         key, has_value, value = item.partition("=")
-        key = key.strip()
+        key = key.strip(" \t")
 
         if not key:
             # =value is not valid
@@ -409,7 +411,7 @@ def parse_dict_header(value: str) -> dict[str, str | None]:
             result[key] = None
             continue
 
-        value = value.strip()
+        value = value.strip(" \t")
         encoding: str | None = None
 
         if key.endswith("*"):
@@ -512,8 +514,8 @@ def parse_options_header(value: str | None) -> tuple[str, dict[str, str]]:
         return "", {}
 
     value, _, rest = value.partition(";")
-    value = value.strip()
-    rest = rest.strip()
+    value = value.strip(" \t")
+    rest = rest.strip(" \t")
 
     if not value or not rest:
         # empty (invalid) value, or value without options
@@ -671,7 +673,7 @@ def parse_accept_header(
 
         if "q" in options:
             # pop q, remaining options are reconstructed
-            q_str = options.pop("q").strip()
+            q_str = options.pop("q").strip(" \t")
 
             if _q_value_re.fullmatch(q_str) is None:
                 # ignore an invalid q
@@ -786,12 +788,12 @@ def parse_csp_header(
     items = []
 
     for policy in value.split(";"):
-        policy = policy.strip()
+        policy = policy.strip(" \t")
 
         # Ignore badly formatted policies (no space)
         if " " in policy:
-            directive, value = policy.strip().split(" ", 1)
-            items.append((directive.strip(), value.strip()))
+            directive, _, value = policy.strip(" \t").partition(" ")
+            items.append((directive.strip(" \t"), value.strip(" \t")))
 
     return cls(items, on_update)
 
@@ -863,10 +865,10 @@ def parse_range_header(
     ranges = []
     last_end = 0
     units, rng = value.split("=", 1)
-    units = units.strip().lower()
+    units = units.strip(" \t").lower()
 
     for item in rng.split(","):
-        item = item.strip()
+        item = item.strip(" \t")
         if "-" not in item:
             return None
         if item.startswith("-"):
@@ -880,8 +882,8 @@ def parse_range_header(
             last_end = -1
         elif "-" in item:
             begin_str, end_str = item.split("-", 1)
-            begin_str = begin_str.strip()
-            end_str = end_str.strip()
+            begin_str = begin_str.strip(" \t")
+            end_str = end_str.strip(" \t")
 
             try:
                 begin = _plain_int(begin_str)
@@ -924,7 +926,7 @@ def parse_content_range_header(
     if value is None:
         return None
     try:
-        units, rangedef = (value or "").strip().split(None, 1)
+        units, _, rangedef = (value or "").strip(" \t").partition(" ")
     except ValueError:
         return None
 
