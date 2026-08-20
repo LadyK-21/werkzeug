@@ -228,11 +228,11 @@ class MultipartDecoder:
         data = HEADER_CONTINUATION_RE.sub(b" ", data)
         # Now there is one header per line
         for line in data.splitlines():
-            line = line.strip()
+            line = line.strip(b" \t")
 
             if line != b"":
                 name, _, value = line.decode().partition(":")
-                headers.append((name.strip(), value.strip()))
+                headers.append((name.strip(" \t"), value.strip(" \t")))
         return Headers(headers)
 
     def _parse_data(

@@ -142,7 +142,7 @@ class StateMachineMatcher:
                     groups = [
                         value
                         for key, value in converter_groups
-                        if key[:11] == "__werkzeug_"
+                        if key.startswith("__werkzeug_")
                     ]
                     rv = _match(new_state, remaining, values + groups)
                     if rv is not None:
