@@ -7,12 +7,14 @@ import typing as t
 if t.TYPE_CHECKING:
     import typing_extensions as te
 
+
 _etag_re = re.compile(
     r"""
-    (?:^|[ \t]*,[ \t]*)  # start or preceded by comma
+    [ \t]*  # ignore leading space
     ([Ww]/)?  # optional weak marker
     "([^"]*)"  # quoted value
-    (?=[ \t]*,[ \t]*|$)  # only if followed by comma or end
+    [ \t]*  # ignore trailing space
+    (?:,|\Z)  # only if followed by comma or end
     """,
     flags=re.ASCII | re.VERBOSE,
 )
@@ -97,9 +99,18 @@ class ETags(cabc.Collection[str]):
 
         strong = []
         weak = []
+        pos = 0
 
-        for match in _etag_re.finditer(value):
-            is_weak, tag = match.groups()
+        while True:
+            if (m := _etag_re.match(value, pos)) is None:
+                # Skip invalid chars until the next comma or end.
+                if (pos := value.find(",", pos) + 1) == 0:
+                    break
+
+                continue
+
+            is_weak, tag = m.groups()
+            pos = m.end()
 
             if is_weak:
                 weak.append(tag)
