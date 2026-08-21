@@ -561,7 +561,11 @@ class LimitedStream(io.RawIOBase):
                     return 0
 
                 if out_size:
-                    b[:out_size] = temp_b
+                    # Need to slice both sides. Math here is complicated.
+                    # size=10, remaining=5, out_size=3, remaining > out_size
+                    # Without slicing temp_b (b[:s] = tb), would try to
+                    # put 5 bytes into 3 bytes, causing b to resize to 12.
+                    b[:out_size] = temp_b[:out_size]
         else:
             # WSGI requires that stream.read is available.
             try:

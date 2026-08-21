@@ -18,6 +18,8 @@ Unreleased
 -   ``Authorization`` parsing ``basic`` auth disallows non-base64 characters.
 -   ``application/x-www-form-urlencoded`` form data is no longer limited to
     ``max_form_memory_size``, only ``max_content_length``.
+-   ``LimitedStream.readinto`` does not resize the buffer when it reads less
+    than the remaining size.
 
 
 Version 3.1.8
