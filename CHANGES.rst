@@ -16,6 +16,8 @@ Unreleased
     is longer than ``sys.get_int_max_str_digits()``. :issue:`3237`
 -   Improve debugger PIN generation from cgroup data inside Podman. :issue:`3245`
 -   ``Authorization`` parsing ``basic`` auth disallows non-base64 characters.
+-   ``application/x-www-form-urlencoded`` form data is no longer limited to
+    ``max_form_memory_size``, only ``max_content_length``.
 
 
 Version 3.1.8
