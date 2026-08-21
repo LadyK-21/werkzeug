@@ -61,6 +61,8 @@ def stream_encode_multipart(
     :class:`FileStorage` objects.) into a multipart encoded string stored
     in a file descriptor.
 
+    This is not secure and must only be used during testing, never in applications.
+
     .. versionchanged:: 3.0
         The ``charset`` parameter was removed.
     """
@@ -146,6 +148,8 @@ def encode_multipart(
 ) -> tuple[str, bytes]:
     """Like `stream_encode_multipart` but returns a tuple in the form
     (``boundary``, ``data``) where data is bytes.
+
+    This is not secure and must only be used during testing, never in applications.
 
     .. versionchanged:: 3.0
         The ``charset`` parameter was removed.

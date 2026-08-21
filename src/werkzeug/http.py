@@ -1343,6 +1343,11 @@ def dump_cookie(
     happens in the wild.  It's strongly recommended to not use
     non-ASCII values for the keys.
 
+    :param key: The cookie key. This is assumed to be trusted and valid, it
+        must not come from untrusted user input.
+    :param value: The cookie value. It will be quoted if it contains characters
+        not allowed by RFC 6265; ``\123`` octal escapes are used to encode
+        non-ASCII bytes.
     :param max_age: should be a number of seconds, or `None` (default) if
                     the cookie should last only as long as the client's
                     browser session.  Additionally `timedelta` objects
