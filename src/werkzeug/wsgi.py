@@ -145,8 +145,10 @@ def get_input_stream(
     safe_fallback: bool = True,
     max_content_length: int | None = None,
 ) -> t.IO[bytes]:
-    """Return the WSGI input stream, wrapped so that it may be read safely without going
-    past the ``Content-Length`` header value or ``max_content_length``.
+    """Return the WSGI input stream, wrapped so that it may be read safely
+    without going past the ``Content-Length`` header value or
+    ``max_content_length``. This must be used to pass a safe stream to other
+    functions, which are not responsible for enforcing this limit.
 
     If ``Content-Length`` exceeds ``max_content_length``, a
     :exc:`RequestEntityTooLarge`` ``413 Content Too Large`` error is raised.
