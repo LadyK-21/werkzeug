@@ -878,6 +878,11 @@ def parse_range_header(
                 begin = _plain_int(item)
             except ValueError:
                 return None
+
+            # -0 will parse to 0, and is an invalid suffix length.
+            if begin == 0:
+                return None
+
             end = None
             last_end = -1
         elif "-" in item:

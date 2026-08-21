@@ -22,6 +22,7 @@ Unreleased
     than the remaining size.
 -   Rules with 10 or more converters in a single part assign matched values
     correctly.
+-   The invalid ``Range`` suffix length ``-0`` is no longer accepted.
 
 
 Version 3.1.8

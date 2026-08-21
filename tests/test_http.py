@@ -687,6 +687,9 @@ class TestRange:
         rv = http.parse_range_header("bytes=52-99, bad")
         assert rv is None
 
+        rv = http.parse_range_header("bytes=-0")
+        assert rv is None
+
     def test_content_range_parsing(self):
         rv = http.parse_content_range_header("bytes 0-98/*")
         assert rv.units == "bytes"
