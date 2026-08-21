@@ -95,7 +95,10 @@ if t.TYPE_CHECKING:
 
 
 class DechunkedInput(io.RawIOBase):
-    """An input stream that handles Transfer-Encoding 'chunked'"""
+    """An input stream that handles ``Transfer-Encoding: chunked``. Only
+    used by the dev server, which must not be used in production. A production
+    WSGI server will have its own robust, secure chunk handler.
+    """
 
     def __init__(self, rfile: t.IO[bytes]) -> None:
         self._rfile = rfile
@@ -107,7 +110,7 @@ class DechunkedInput(io.RawIOBase):
 
     def read_chunk_len(self) -> int:
         try:
-            line = self._rfile.readline().decode("latin1")
+            line = self._rfile.readline(100).decode("latin1")
             _len = int(line.strip(" \t\r\n"), 16)
         except ValueError as e:
             raise OSError("Invalid chunk header") from e
@@ -149,7 +152,7 @@ class DechunkedInput(io.RawIOBase):
             if self._len == 0:
                 # Skip the terminating newline of a chunk that has been fully
                 # consumed. This also applies to the 0-sized final chunk
-                terminator = self._rfile.readline()
+                terminator = self._rfile.readline(2)
                 if terminator not in (b"\n", b"\r\n", b"\r"):
                     raise OSError("Missing chunk terminating newline")
 

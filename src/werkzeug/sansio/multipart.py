@@ -293,6 +293,12 @@ class MultipartDecoder:
 
 
 class MultipartEncoder:
+    """Used by the test client to create a multipart body. This is not secure
+    and must only be used during testing, never in applications.
+
+    :meta private:
+    """
+
     def __init__(self, boundary: bytes) -> None:
         self.boundary = boundary
         self.state = State.PREAMBLE
